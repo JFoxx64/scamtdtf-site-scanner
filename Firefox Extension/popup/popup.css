@@ -1,0 +1,37 @@
+html, body {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #1e3750;
+  width: 200px;
+  user-select: none;
+}
+
+h1{
+  font-size: 16px;
+  margin: 10px auto;
+  text-align: center;
+}
+
+.hidden {
+  display: none;
+}
+
+.social{
+  display: inline-flex;
+}
+
+.social img{
+  width: 64px;
+  transition: 0.2s ease-in-out;
+}
+
+.social img:hover{
+  filter: contrast(70%);
+}
+
+.details{
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+}

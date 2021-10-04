@@ -1,0 +1,37 @@
+{
+  "manifest_version": 2,
+  "name": "Scam Takedown Task Force Site Scanner",
+  "version": "0.11",
+  "description": "Scans websites against the Scam Takedown Task Force database and warns you if a site is in our Database",
+  "icons": {
+    "64": "icons/STDTF.ico"
+  },
+
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "*://scamtdtf.com/*"
+  ],
+
+  "browser_action": {
+    "default_icon": "icons/STDTF.ico",
+    "theme_icons": [{
+        "light": "icons/STDTF.ico",
+        "dark": "icons/STDTF.ico",
+        "size": 64
+    }],
+    "default_title": "Scam Takedown Task Force",
+    "default_popup": "popup/popup.html"
+  },
+  
+  "content_scripts": [
+    {
+      "matches": ["*://*.google.com/*"],
+      "js": ["content_scripts/google.js"]
+    },
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content_scripts/sitecheck.js"]
+    }
+  ]
+}
