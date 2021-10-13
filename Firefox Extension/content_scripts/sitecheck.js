@@ -1,7 +1,7 @@
 const html = document.URL;
 let url = new URL(html).origin;
 
-fetch("http://scamtdtf.com:3000/api/checksite", {
+fetch("https://scamtdtf.com:3000/api/checksite", {
     method: "POST",
     headers : {
         siteurl : url
