@@ -5,6 +5,59 @@ let showpopout = true;
 let cautionbanner = false;
 let cautionflag = false;
 
+function vote(id, value){
+    console.log(id, value)
+    fetch("https://scamtdtf.com:3000/api/recordvote", { method: "POST", headers : { id : id, vote : value } });
+}
+
+function checkSite(){
+    createButton();
+
+    // fetch("https://scamtdtf.com:3000/api/v3/checksite", {
+    //     method: "POST",
+    //     headers : {
+    //         siteurl : url
+    //     }})
+    //     .then( res => res.json())
+    //     .then (res => {
+    //         if(res.found){
+    //             let resdata = res.data[0];
+    //             createBannerWarning(resdata);
+    //         }else if(res.inreview){
+    //             createReviewBanner();
+    //         }else if(res.indeepscan){
+    //             createSideCautionPopout();
+    //         } else{
+    //             closeSidePopout();
+    //         }
+    //     })
+    //     .catch( error => console.log(error));
+}
+
+function createButton(){
+    let div = document.createElement("div");
+    div.classList.add("innerSpinRing")
+    // div.innerHTML = "Test"
+    document.body.insertBefore(div, document.body.firstChild);
+}
+
+function checkSettings() {
+    function setCurrentChoice(result) {
+        if(result) showpopout = result.slideout;
+        else {
+            browser.storage.sync.set({ slideout: true });
+            showpopout = true;
+        }
+    }
+
+    function onError(error) {
+        console.log(`Error: ${error}`);
+    }
+
+    let getting = browser.storage.sync.get("slideout");
+    getting.then(setCurrentChoice, onError);
+}
+
 function createBannerWarning(resdata){
     closeSidePopout();
     closeCautionBanner();
@@ -56,11 +109,6 @@ function createBannerWarning(resdata){
         div.remove();
     };
     div.appendChild(button);
-}
-
-function vote(id, value){
-    console.log(id, value)
-    fetch("https://scamtdtf.com:3000/api/recordvote", { method: "POST", headers : { id : id, vote : value } });
 }
 
 function createReviewBanner(){
@@ -193,44 +241,44 @@ function forceCloseSidePopout(){
     }
 }
 
-function checkSite(){
-    fetch("https://scamtdtf.com:3000/api/v3/checksite", {
-        method: "POST",
-        headers : {
-            siteurl : url
-        }})
-        .then( res => res.json())
-        .then (res => {
-            if(res.found){
-                let resdata = res.data[0];
-                createBannerWarning(resdata);
-            }else if(res.inreview){
-                createReviewBanner();
-            }else if(res.indeepscan){
-                createSideCautionPopout();
-            } else{
-                closeSidePopout();
-            }
-        })
-        .catch( error => console.log(error));
+function addStyle(styleString) {
+    const style = document.createElement('style');
+    style.textContent = styleString;
+    document.head.append(style);
 }
+  
+addStyle(`
+    .innerSpinRing {
+        position: fixed;
+        left: 0;
+        top: 0;
+        z-index: 9001;
+        transform: translate(-50%, -50%);
+        height: 100px;
+        width: 200px;
+        border-radius: 150px 150px 0 0;
+        background-color: #0CB1C4;
+        animation-name: spin;
+        animation-duration: 5000ms;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear; 
+        /* transform: rotate(3deg); */
+        /* transform: rotate(0.3rad);/ */
+        /* transform: rotate(3grad); */ 
+        /* transform: rotate(.03turn);  */
+    }
+`);
 
-function checkSettings() {
-    function setCurrentChoice(result) {
-        if(result) showpopout = result.slideout;
-        else {
-            browser.storage.sync.set({ slideout: true });
-            showpopout = true;
+addStyle(`
+    @keyframes spin {
+        from {
+            transform:rotate(0deg);
+        }
+        to {
+            transform:rotate(360deg);
         }
     }
-
-    function onError(error) {
-        console.log(`Error: ${error}`);
-    }
-
-    let getting = browser.storage.sync.get("slideout");
-    getting.then(setCurrentChoice, onError);
-}
+`);
 
 checkSettings();
 checkSite();
