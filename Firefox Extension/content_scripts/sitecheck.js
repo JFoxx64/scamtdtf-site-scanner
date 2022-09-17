@@ -36,8 +36,25 @@ function checkSite(){
 
 function createButton(){
     let div = document.createElement("div");
-    div.classList.add("innerSpinRing")
-    // div.innerHTML = "Test"
+    div.style = "all: initial; width: 100px; height: 100px; position: fixed; top: 100px; left: 0; z-index: 9001;"
+    div.innerHTML = '<div class="flake flake-three"></div><div class="flake flake-one"></div><div class="flake flake-two"></div>'
+    document.body.insertBefore(div, document.body.firstChild);
+
+    let infodiv = document.createElement("div");
+    infodiv.style = "all: initial; width: 100px; height: 100px; position: fixed; top: 200px; left: 0; z-index: 9001; text-align: center; font-family: Avenir, Helvetica, Arial, sans-serif;"
+    infodiv.innerHTML = "Scanning website"
+    document.body.insertBefore(infodiv, document.body.firstChild);
+
+    let clickoverlay = document.createElement("div");
+    clickoverlay.id = "stdtf-scanner"
+    clickoverlay.classList.add("scanner-button")
+    div.appendChild(clickoverlay);
+}
+
+function createSideBar(){
+    let div = document.createElement("div");
+    div.id = "stdtf-sidebar"
+    div.style = "all: initial; width: 100px; height: 100vh; position: fixed; top: 100px; left: 0; z-index: 9000; background-color: blue;"
     document.body.insertBefore(div, document.body.firstChild);
 }
 
@@ -247,25 +264,76 @@ function addStyle(styleString) {
     document.head.append(style);
 }
   
+
 addStyle(`
-    .innerSpinRing {
-        position: fixed;
-        left: 0;
+    .scanner-button{
+        all: initial;
+        width: 100px;
+        height: 200px;
+        position: absolute;
         top: 0;
+        left: 0;
+        z-index: 9002;
+        cursor: pointer;
+        transition: 0.3s ease-in-out;
+        border-radius: 0 13px 13px 0;
+    }
+    .scanner-button:hover {
+        background-color: rgba(130,130,130,0.3);
+    }
+`);
+addStyle(`
+    .flake {
+        all: initial;
+        position: absolute;
+        border-radius: 50%;
         z-index: 9001;
-        transform: translate(-50%, -50%);
-        height: 100px;
-        width: 200px;
-        border-radius: 150px 150px 0 0;
-        background-color: #0CB1C4;
-        animation-name: spin;
-        animation-duration: 5000ms;
+    }
+`);
+addStyle(`
+    .flake-one {
+        width: 46px;
+        height: 46px;
+        border: 10px solid transparent;
+        left:calc(50% - 33px);
+        top:calc(50% - 33px);
+        border-top-color: #ff2c2c;
+        border-right-color: #ff2c2c;
+        border-left-color: #ff2c2c;
+        animation: spin;
         animation-iteration-count: infinite;
-        animation-timing-function: linear; 
-        /* transform: rotate(3deg); */
-        /* transform: rotate(0.3rad);/ */
-        /* transform: rotate(3grad); */ 
-        /* transform: rotate(.03turn);  */
+        animation-timing-function: linear;
+        animation-duration: 1000ms;
+    }
+`);
+addStyle(`
+    .flake-two {
+        width: 40px;
+        height: 40px;
+        border: 10px solid transparent;
+        left:calc(50% - 30px);
+        top: calc(50% - 30px);
+        border-top-color: black;
+        animation: counterspin;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
+        animation-duration: 3000ms;
+    }
+`);
+addStyle(`
+    .flake-three {
+        width: 50px;
+        height: 50px;
+        border: 20px solid transparent;
+        left:calc(50% - 45px);
+        top: calc(50% - 45px);
+        border-bottom-color: black;
+        border-right-color: black;
+        border-left-color: black;
+        animation: counterspin;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
+        animation-duration: 10000ms;
     }
 `);
 
@@ -276,6 +344,17 @@ addStyle(`
         }
         to {
             transform:rotate(360deg);
+        }
+    }
+`);
+
+addStyle(`
+    @keyframes counterspin {
+        from {
+        transform:rotate(0deg);
+        }
+        to {
+        transform:rotate(-360deg);
         }
     }
 `);
