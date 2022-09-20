@@ -1,10 +1,26 @@
 * {
-  margin: 0;
+  margin-top: 60px;
   padding: 0;
+  text-align: center;
   border: none;
-  font-family: Arial, sans-serif;
+  color: #333;
+  font-family: Avenir, Helvetica, Arial, sans-serif;;
 }
 
 body {
+  background-color: #e4e4e4;
   font-size: 14px;
+}
+
+button{
+  background-color: #c0c0c0;
+  color: #4d4d4d;
+  cursor: pointer;
+  padding: 20px;
+  border-radius: 7px;
+  transition: 0.3s ease-in-out;
+}
+
+button:hover{
+  background-color: rgb(189, 189, 189);
 }

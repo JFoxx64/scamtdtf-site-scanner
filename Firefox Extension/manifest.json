@@ -1,17 +1,10 @@
 {
   "manifest_version": 2,
   "name": "Scam Takedown Task Force Site Scanner",
-  "version": "0.16",
+  "version": "0.17",
   "description": "Scans websites against the Scam Takedown Task Force database and warns you if a site is in our Database",
   "icons": {
     "64": "icons/STDTF.ico"
-  },
-
-  "browser_specific_settings": {
-    "gecko": {
-      "id": "dan@scamtdtf.com",
-      "strict_min_version": "42.0"
-    }
   },
 
   "permissions": [

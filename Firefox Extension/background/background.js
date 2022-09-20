@@ -20,10 +20,10 @@ function openPermissions(){
 browser.runtime.onInstalled.addListener(openPermissions);
 
 browser.runtime.onMessage.addListener(function(request) {
-    if(request.type = "openpermissions"){
+    if(request.type == "openpermissions"){
         openPermissions();
     }
-    else if(request.type = "updatepermission"){
+    else if(request.type == "updatepermission"){
         browser.storage.sync.set({allowurls: request.message}, function() {
             getActiveTab().then((tabs) => {
                 browser.tabs.sendMessage(tabs[0].id, {msg: "UpdatePermissions"});
