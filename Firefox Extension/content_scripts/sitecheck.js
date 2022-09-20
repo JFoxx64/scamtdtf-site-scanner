@@ -1,12 +1,31 @@
 const html = document.URL;
-let url = new URL(html).origin;
+let url = null
 let siteid = null;
 
 let checked = false;
-let laststatus = "scanning"
+let laststatus = "nopermission"
 let finalcheck = false;
 
 let bannerclosed = false;
+
+function loaded(item) {
+    console.log(item);
+
+    if(item.allowurls){
+        url = new URL(html).origin;
+        laststatus = "scanning"
+        checkSite();
+    } else{
+        laststatus == "nopermission"
+    }
+}
+  
+function error(error) {
+    console.log(`Error: ${error}`);
+}
+
+browser.storage.sync.get("allowurls")
+.then(loaded, error);
 
 function vote(value){
     fetch("https://scamtdtf.com:3000/api/recordvote", { method: "POST", headers : { id : siteid, vote : value, url : url } });
@@ -265,14 +284,14 @@ function createChip(chip, position, title){
 }
 
 function fillAllChips(){
-    fillSiteChip("stdtf-site-chip");
+    fillSiteChip();
     fillVoteChip();
     fillShareChip();
     fillNewsChip();
     fillSupportChip();
 }
 
-function fillSiteChip(chip){
+function fillSiteChip(){
     let sitechip = document.getElementById("stdtf-site-chip");
 
     if(sitechip){
@@ -281,7 +300,16 @@ function fillSiteChip(chip){
         statusdiv.classList.add("stdtf-site-chip-status");
         sitechip.appendChild(statusdiv);
 
-        if(laststatus != "warning" && laststatus != "caution")
+        if(laststatus == "nopermission"){
+            let button = document.createElement("button");
+            button.textContent = "Update Permissions";
+            button.style = "all: initial; width: calc(100% - 110px); font-size: 14px; margin-left: 10px; margin-right: 80px; text-align: center; background-color: #D9D9D9; border-radius: 7px; padding: 5px; width: calc(100% - 110px); font-size: 14px; cursor: pointer; font-family: Avenir, Helvetica, Arial, sans-serif;"
+            button.onclick= function(){
+                browser.runtime.sendMessage({type: "openpermissions"});
+            }
+            sitechip.appendChild(button);
+        }
+        else if(laststatus != "warning" && laststatus != "caution")
         {
             let button = document.createElement("button");
             button.textContent = "Report Site";
@@ -313,7 +341,21 @@ function updateSiteChipStatus(){
 
         if(sitechipicon) sitechipicon.remove();
 
-        if(laststatus == "clear"){
+        if(laststatus == "nopermission"){
+            let nopermissionicon = document.createElement("div");
+            nopermissionicon.id = "stdtf-site-chip-icon";
+            nopermissionicon.style = "margin-top: 50px; padding: unset; box-sizing: unset;"
+            nopermissionicon.innerHTML = '<svg style="vertical-align: unset;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="60" height="60" viewBox="0 0 60 60"><image x="4" width="54" height="54" xlink:href="data:img/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAE0klEQVR4nO3dyYsdRRzA8a8zmUQN8aCHiFFjMG4XZ4jLVQUVF/DP8are3CMexMTtoiYacUcFLwoiHlTEQRPjEgVXNBcVQdCJlNRPmrKq39bV9ft11xeaQL/HdL3+0P2mJ/3qYbirgP3AZ8DvfjkMPARcbvmFWWsH8CZwomXZAA4A28a+s3K3B/hpAkZzWQfOHPYuKdca8MsMGLK4U9pZY91puUphvApcC5zhT083AO9Fnne4HindtZrAuCOxhc3AoYqSp0uBnyM7964JW1sGnqqnr26bF0OqKB12CfBDZGfePeMmKkoHXdwRhlRRFiiFcc+CP7eizFEuDKmizNBFwPeRnXVvx9upKFOUwrgv0/YqSkt9Y0gVJZLD+C6yU+7vafsVpdGFhTGkitKCsbfQeEaNcoEyDGmUKA7jW4UY0qhQUhgPACcpGJ80CpQUxj5lGNKgUXYbw5AGiXIecCzyovYrx5AGhbLTOIY0CJShYEimURzGV5HBPwIsKRjfvJlEOTeB8ahxDMkUyi7g655/m9oO/BrZ5pFM23NtsnCLUerIeCzzkbEW2aYsOVN9pDiMLwtgUBAErSjnFMSgMAjaUBzGF5HBPN7jG3hpELSgpDCe6Pm3KQ0glEbRgoEiEEqhnJ3AOOAH1HeaQOgbxWF8rggDhSD0hZLCOOgvlEqlEYTcKO7q81OFGCgGIRfK9gTGMwowUA5C1ygO4xPFGBgAoSuUFMazijAwAsKiKFYwMATCvCgpjEMKMTAGwqwo2/ysB5rfM8KsgdDy/ynr4TQgB41hYBSEFpSn5QlX+slatL9nhFkFIYHiDC5zDz4cPPCBnw1Be5ZBXCvAu8G4H3QPHA1W3lx+rFNlHQQ/T0tz3B+7lX8EK7eWH+dUDQFkazDu40uRu0IsvSDrnRyMf2PJf4Cm2RVj30s9dn2wqW8cyFvBylsH97J15q47bg9G5qYu5OrIOTg1F5WmLL+HuFPVG8GY//KT7vxbbFLJUE9bVkEcxuuRMe9rPmlHYnJJzSgWQVIYHwKnhk9OzWt4Z5mxT8waiLvYfiUy1iNtf/F107AeN3KkrCYwNhSMLcwdGa9Fxvq/m7TDv1e5Q+c6/55yemP9bf5fTTBH/Zwo4WTJxwqNJ9UW4HngxuBxd2RcA/w4zQ+xdvrSmjtNvTzraSpVRVmsTjGkijJfWTCkijJbWTGkijJdDuOl3BhSRWmvVwxJ03XKacDbwPvB4j4acUrPY9nivxhg4nVGjrSgtF2pr/Y4jqIYkobTVxvIWk9jKHKaSlUapTSIKgypJEpJEJUYUimUUiCqMaQSb/TnR27wO+HX7cy0zdRFn8pv7ymBssvf7ddcdmfalikMaagXjw7jRe2nqVRDQzGNIQ0FZRAYknUUh/HCUDAkqygrQ8SQrKEMGkOygjIKDEk7yqgwJK0oo8SQtKGMGkPSglIxGpVGWfF3FFaMRqVQKkZLfaNUjCnqC2XZT0tYMaYoN0rFmKNcKBVjgbpGqRgd1BXKsp9lp2J00KIoFSND86JUjIyl7mZJTW6w2cK34FgvhfKcv/1nk59Z5xb/wdWK0UOp09ekpZ6mMrYnMeNEalmvR0b+3PdevTMB4m//3YlWJmMbRDcBT/qv6/sT+A34yE8m8N+sOqYC/gHt0wIb+yg2FgAAAABJRU5ErkJggg=="/></svg>'
+            iconcontainer.style.backgroundColor = "#DD3333";
+            iconcontainer.style.backgroundImage = "linear-gradient(to bottom left, #DD3333, #bf2020)"
+            iconcontainer.style.title = "We don't have permission!"
+            iconcontainer.appendChild(nopermissionicon);
+
+            if(sitechip){
+                statusdiv.innerHTML = "<b style='font-size: 14px'>We don't have permission!</b><div style = 'font-size: 10px;'>What does this mean?</div><div>You need to agree for us to use the URLs to the sites you visit in order for us to scan them.</div>";
+            }
+        }
+        else if(laststatus == "clear"){
             let clearicon = document.createElement("div");
             clearicon.id = "stdtf-site-chip-icon";
             clearicon.style = "margin-top: 50px; padding: unset; box-sizing: unset;"
@@ -799,19 +841,22 @@ addStyle(`
 `);
 
 browser.runtime.onMessage.addListener((request) => {
-    if(document.getElementById("stdtf-sidebar")){
-        destroySideBar();
-    }else{
-        if(document.getElementById("stdtf-scanner")) {
-            destroyButton();
-    
-            setTimeout(() => {
-                createSideBar()
-            }, 350);
-        } else{
-            createSideBar();
+    if(request.msg == "OpenSettings"){
+        if(document.getElementById("stdtf-sidebar")){
+            destroySideBar();
+        }else{
+            if(document.getElementById("stdtf-scanner")) {
+                destroyButton();
+        
+                setTimeout(() => {
+                    createSideBar()
+                }, 350);
+            } else{
+                createSideBar();
+            }
         }
+    } else if(request.msg == "UpdatePermissions"){
+        checkSite();
     }
-});
 
-checkSite();
+});

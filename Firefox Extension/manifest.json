@@ -7,7 +7,15 @@
     "64": "icons/STDTF.ico"
   },
 
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "dan@scamtdtf.com",
+      "strict_min_version": "42.0"
+    }
+  },
+
   "permissions": [
+    "storage",
     "*://scamtdtf.com/*"
   ],
 
