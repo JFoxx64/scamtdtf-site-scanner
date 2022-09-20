@@ -24,18 +24,17 @@ function checkSite(){
         }})
         .then( res => res.json())
         .then (res => {
-
             let previousstatus = laststatus;
 
             if(res.found){
                 laststatus = "warning";
                 siteid = res.data[0].id;
-                createBanner("warning", "warning-banner", "<div>Warning!</div><div>This website has been reported as a scam on Scam Takedown Task Force</div>", true);
+                createBanner("warning", "warning-banner", "Warning!", "This website has been reported as a scam on Scam Takedown Task Force", true);
                 destroyButton();
             }else if(res.inreview){
                 laststatus = "caution";
                 if(previousstatus != laststatus){
-                    createBanner("caution", "caution-banner", "<div>Caution!</div><div>This website has been flagged as a scam on Scam Takedown Task Force and is awaiting Auditor review</div>", true);
+                    createBanner("caution", "caution-banner", "Caution!", "This website has been flagged as a scam on Scam Takedown Task Force and is awaiting Auditor review", true);
                     destroyButton();
                 }
             }else if(res.indeepscan){
@@ -43,7 +42,7 @@ function checkSite(){
             }else if(res.userreported){
                 laststatus = "userreported"
                 if(previousstatus != laststatus){
-                    createBanner("caution", "reported-banner", "<div>Caution!</div><div>This website has been reported by users as a scam on Scam Takedown Task Force and is awaiting Auditor review</div>", true);
+                    createBanner("caution", "reported-banner", "Caution!", "This website has been reported by users as a scam on Scam Takedown Task Force and is awaiting Auditor review", true);
                     destroyButton();
                 }
             } else{
@@ -89,7 +88,7 @@ function createButton(){
 
     let infodiv = document.createElement("div");
     infodiv.style = "all: initial; width: 100px; height: 100px; position: absolute; bottom: -100px; left: 0; z-index: 2147483601; text-align: center; font-family: Avenir, Helvetica, Arial, sans-serif;"
-    infodiv.innerHTML = "Scanning website"
+    infodiv.textContent = "Scanning website"
     div.appendChild(infodiv);
 
     let clickoverlay = document.createElement("div");
@@ -162,7 +161,7 @@ function createSideBar(){
     fillAllChips();
 }
 
-function createBanner(status, bannerclass, message, voteaction){
+function createBanner(status, bannerclass, header, message, voteaction){
     if(status == "clear" || status == "queue") return;
 
     destroyAllBanners();
@@ -170,13 +169,18 @@ function createBanner(status, bannerclass, message, voteaction){
     let div = document.createElement("div");
     div.id = "stdtf-banner";
     div.classList.add("stdtf-banner", bannerclass)
-    div.innerHTML = message
+    div.textContent = header
     document.body.insertBefore(div, document.body.firstChild);
+
+    let messagediv = document.createElement("div");
+    messagediv.id = "stdtf-banner";
+    messagediv.textContent = message
+    div.append(messagediv);
 
     if(voteaction){
         let votediv = document.createElement("div");
         votediv.style = 'all: initial; text-align: center; padding : 10px; color : #000000; font-size : 16px; font-family: Avenir, Helvetica, Arial, sans-serif;';
-        votediv.innerHTML = "Was this warning useful?"
+        votediv.textContent = "Was this warning useful?"
         div.appendChild(votediv);
     
         let buttonapprove = document.createElement("button");
@@ -187,7 +191,7 @@ function createBanner(status, bannerclass, message, voteaction){
     
             let thanksdiv = document.createElement("div");
             thanksdiv.style = 'all: initial; text-align: center; padding : 10px; color : #000000; font-size : 16px; font-family: Avenir, Helvetica, Arial, sans-serif;';
-            thanksdiv.innerHTML = "Thank you for your input!"
+            thanksdiv.textContent = "Thank you for your input!"
             div.appendChild(thanksdiv);
 
             votediv.remove();
@@ -202,7 +206,7 @@ function createBanner(status, bannerclass, message, voteaction){
             
             let thanksdiv = document.createElement("div");
             thanksdiv.style = 'all: initial; text-align: center; padding : 10px; color : #000000; font-size : 16px; font-family: Avenir, Helvetica, Arial, sans-serif;';
-            thanksdiv.innerHTML = "Thank you for your input!"
+            thanksdiv.textContent = "Thank you for your input!"
             div.appendChild(thanksdiv);
 
             votediv.remove();
@@ -212,7 +216,7 @@ function createBanner(status, bannerclass, message, voteaction){
 
     let button = document.createElement("button");
     button.style = "all: initial; display : block; border-radius: 7px; margin: 10px auto; padding : 10px 50px; cursor: pointer; background-color: #D9D9D9; font-family: Avenir, Helvetica, Arial, sans-serif;";
-    button.innerHTML = "Close";
+    button.textContent = "Close";
     button.onclick = function () {
         div.remove();
         bannerclosed = true;
@@ -221,7 +225,7 @@ function createBanner(status, bannerclass, message, voteaction){
 
     let sidebarbutton = document.createElement("button");
     sidebarbutton.style = "all: initial; display : block; border-radius: 7px; margin: 10px auto; padding : 10px 50px; cursor: pointer; background-color: #D9D9D9; font-family: Avenir, Helvetica, Arial, sans-serif;";
-    sidebarbutton.innerHTML = "Toggle Sidebar";
+    sidebarbutton.textContent = "Toggle Sidebar";
     sidebarbutton.onclick = function () {
         if(document.getElementById("stdtf-sidebar")){
             destroySideBar();
@@ -254,7 +258,7 @@ function createChip(chip, position, title){
 
     let titlediv = document.createElement("div");
     titlediv.classList.add("stdtf-chip-title");
-    titlediv.innerHTML = title;
+    titlediv.textContent = title;
     div.appendChild(titlediv);
 
     return div;
@@ -280,11 +284,11 @@ function fillSiteChip(chip){
         if(laststatus != "warning" && laststatus != "caution")
         {
             let button = document.createElement("button");
-            button.innerHTML = "Report Site";
+            button.textContent = "Report Site";
             button.style = "all: initial; width: calc(100% - 110px); font-size: 14px; margin-left: 10px; margin-right: 80px; text-align: center; background-color: #D9D9D9; border-radius: 7px; padding: 5px; width: calc(100% - 110px); font-size: 14px; cursor: pointer; font-family: Avenir, Helvetica, Arial, sans-serif;"
             button.onclick= function(){
                 let reportdiv = document.createElement("div");
-                reportdiv.innerHTML = "Thank you for reporting this site, we use your input to help improve our results!";
+                reportdiv.textContent = "Thank you for reporting this site, we use your input to help improve our results!";
                 reportdiv.classList.add("stdtf-site-chip-status");
                 sitechip.appendChild(reportdiv);
 
@@ -410,7 +414,7 @@ function fillVoteChip(){
 
             function submitVote(vote){
                 let reportdiv = document.createElement("div");
-                reportdiv.innerHTML = "Thank you for your input, it helps improve our systems iin detecting scams!";
+                reportdiv.textContent = "Thank you for your input, it helps improve our systems iin detecting scams!";
                 reportdiv.classList.add("stdtf-site-chip-status");
                 votechip.appendChild(reportdiv);
 
@@ -445,7 +449,7 @@ function fillShareChip(){
         sharechip.appendChild(buttondiv);
 
         let copylinkbutton = document.createElement("button");
-        copylinkbutton.innerHTML = "📋";
+        copylinkbutton.textContent = "📋";
         copylinkbutton.style = "all: initial; margin: auto; background-color: #D9D9D9; border-radius: 7px; padding: 10px; font-size: 40px; text-align: center; cursor: pointer; font-family: Avenir, Helvetica, Arial, sans-serif;"
         copylinkbutton.onclick= function(){
             copyFunction("https://scamtdtf.com/","Scam Takedown Task Force Website link copied to clipboard!");
@@ -478,7 +482,7 @@ function fillShareChip(){
             let copymessage = document.createElement("div");
             copymessage.classList.add("stdtf-site-chip-status");
             copymessage.style = "color: transparent; transition: 0.3s ease-in-out;";
-            copymessage.innerHTML = message;
+            copymessage.textContent = message;
             sharechip.appendChild(copymessage);
 
             setTimeout(() => {
@@ -524,14 +528,22 @@ function fillNewsChip(){
             let articlediv = document.createElement("div");
             articlediv.classList.add("stdtf-site-chip-status");
             articlediv.style = "word-wrap: break-word;";
-            articlediv.innerHTML = "<b style='font-size: 14px'>" + webdetails.title + "</b><div>" + webdetails.subtitle + "</div>";
             newschip.appendChild(articlediv);
+
+            let articleheader = document.createElement("b");
+            articleheader.style = "style='font-size: 14px'";
+            articleheader.textContent = webdetails.title;
+            articlediv.appendChild(articleheader);
+
+            let articleDetails = document.createElement("div");
+            articleDetails.textContent = webdetails.subtitle;
+            articlediv.appendChild(articleDetails);
     
             let articlelink = document.createElement("a");
             articlelink.href = webdetails.url;
             articlelink.target = "_blank"
             articlelink.style = "all: initial; background-color: #D9D9D9; border-radius: 7px; padding: 5px; width: calc(100% - 110px); font-size: 14px; margin-left: 10px; margin-right: 80px; margin-top: 5px; font-size: 12px; text-align: center; cursor: pointer; font-family: Avenir, Helvetica, Arial, sans-serif;"
-            articlelink.innerHTML = 'Read More';
+            articlelink.textContent = 'Read More';
             newschip.appendChild(articlelink);
         })
         .catch(err => {
@@ -566,7 +578,7 @@ function fillSupportChip(){
         kofilink.href = "https://ko-fi.com/scamtdtf"
         kofilink.target = "_blank"
         kofilink.style = "all: initial; background-color: #D9D9D9; border-radius: 7px; padding: 5px; width: calc(100% - 110px); font-size: 14px; margin-left: 10px; margin-right: 80px; font-size: 12px; text-align: center; cursor: pointer; font-family: Avenir, Helvetica, Arial, sans-serif;"
-        kofilink.innerHTML = 'Become a Member or Buy Us a Coffee';
+        kofilink.textContent = 'Become a Member or Buy Us a Coffee';
         supportchip.appendChild(kofilink);
     }
 }
