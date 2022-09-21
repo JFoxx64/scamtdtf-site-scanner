@@ -1,5 +1,5 @@
 * {
-  margin-top: 60px;
+  margin-top: 20px;
   padding: 0;
   text-align: center;
   border: none;
@@ -22,5 +22,5 @@ button{
 }
 
 button:hover{
-  background-color: rgb(189, 189, 189);
+  background-color: #dadada;
 }
