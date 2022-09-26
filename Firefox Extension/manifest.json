@@ -4,7 +4,7 @@
   "version": "0.18",
   "description": "Scans websites against the Scam Takedown Task Force database and warns you if a site is in our Database",
   "icons": {
-    "64": "icons/STDTF.ico"
+    "128": "icons/STDTF.png"
   },
 
   "permissions": [
@@ -13,11 +13,11 @@
   ],
 
   "browser_action": {
-    "default_icon": "icons/STDTF.ico",
+    "default_icon": "icons/STDTF.png",
     "theme_icons": [{
-        "light": "icons/STDTF.ico",
-        "dark": "icons/STDTF.ico",
-        "size": 64
+        "light": "icons/STDTF.png",
+        "dark": "icons/STDTF.png",
+        "size": 128
     }],
     "default_title": "Scam Takedown Task Force"
   },
