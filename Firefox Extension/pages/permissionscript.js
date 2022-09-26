@@ -22,7 +22,7 @@ if(uninstallbutton) {
     uninstalling.then(function(){
       removeButtons();
       var agreedtext = document.createElement('div');
-      agreedtext.textContent = "Sorry to see you go, but still hope that you have a great rest of your day!<br/>You can close this tab now"
+      agreedtext.innerHTML = "Sorry to see you go, but still hope that you have a great rest of your day!<br/>You can close this tab now"
       document.body.appendChild(agreedtext);
     }, onCanceled);
   }
@@ -47,6 +47,6 @@ function saveSetting(setting){
   removeButtons();
 
   var agreedtext = document.createElement('div');
-  agreedtext.textContent = "Your preferences have been saved."
+  agreedtext.innerHTML = "Your preferences have been saved.<br/>You can close this tab now"
   document.body.appendChild(agreedtext);
 }
